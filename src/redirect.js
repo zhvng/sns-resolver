@@ -48,6 +48,13 @@ async function getContentFromAccount(publicKey) {
     return data;
 }
 
+/**
+ * Compute the key for the account pointing to the domain. 
+ * Code from @solana/spl-name-service with modifications so it works in the browser.
+ * 
+ * @param {*} name The .sol domain name
+ * @returns Public key of the domain's account in the sns
+ */
 async function getKey(name) {
     const HASH_PREFIX = 'SPL Name Service';
     const SOL_TLD_AUTHORITY = new web3.PublicKey(
