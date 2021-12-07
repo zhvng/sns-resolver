@@ -1,34 +1,46 @@
 const web3 = solanaWeb3;
 
+/**
+ * Redirects the solana url to the domain/ip/ipfs hash(TODO) it points to.
+ * 
+ * window.location.href has one param `solanaUrl`, which contains the hostname and path 
+ *  of the solana url that is passed in. Not required to contain other elements.
+ */
 async function main() {
-    // PARSE PARAMS TO GET DOMAIN NAME
-    const redirectUrl = new URL(window.location.href).searchParams.get("redirectUrl");
-    const redirectUrlParsed = new URL(redirectUrl);
-    const hostnameArray = redirectUrlParsed.hostname.split('.');
+    const solanaUrl = addHttps(new URL(window.location.href).searchParams.get("solanaUrl"));
+    const solanaUrlParsed = new URL(solanaUrl);
+    const hostnameArray = solanaUrlParsed.hostname.split('.');
     const SNSDomain = hostnameArray[hostnameArray.length - 2];
 
-    document.getElementById('display').textContent = SNSDomain + '.sol'
+    document.getElementById('display').textContent = SNSDomain + '.sol';
     try{
-        const data = await getContentFromAccount(await getKey(SNSDomain));
-        const url = data + redirectUrlParsed.pathname;
-        window.location.href = addHttp(url);
+        const publicKey = await getKey(SNSDomain);
+        const data = await getContentFromAccount(publicKey);
+        const url = data + solanaUrlParsed.pathname;
+        window.location.href = addHttps(url);
     } catch(err) {
         window.location.href = './404.html';
     }
 }
 
 /**
+ * Append the `https://` scheme to the beginning of a url if it does not have it.
  * 
- * @param {string} url URL to add http to
- * @returns 
+ * @param {string} url to add the scheme to
+ * @returns String of the url with a scheme
  */
- function addHttp(url) {
+function addHttps(url) {
     if (!url.match(/^(?:f|ht)tps?:\/\//)) {
         url = "https://" + url;
     }
     return url;
 }
 
+/**
+ * 
+ * @param {web3.PublicKey} publicKey 
+ * @returns 
+ */
 async function getContentFromAccount(publicKey) {
     const connection = new web3.Connection(web3.clusterApiUrl('mainnet-beta'));
     const nameAccount = await connection.getAccountInfo(publicKey, 'processed');

@@ -3,7 +3,7 @@
     "version": "1.0",
     "manifest_version": 3,
     "background": {
-      "service_worker": "background.js"
+      "service_worker": "src/background.js"
     },
     "action": {
         "default_popup": "popup.html"
