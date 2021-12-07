@@ -1,4 +1,3 @@
-console.log(solanaWeb3)
 const web3 = solanaWeb3;
 
 async function main() {
@@ -7,16 +6,13 @@ async function main() {
     const redirectUrlParsed = new URL(redirectUrl);
     const hostnameArray = redirectUrlParsed.hostname.split('.');
     const SNSDomain = hostnameArray[hostnameArray.length - 2];
-    console.log(redirectUrl, redirectUrlParsed.hostname, SNSDomain);
 
     document.getElementById('display').textContent = SNSDomain + '.sol'
     try{
         const data = await getContentFromAccount(await getKey(SNSDomain));
         const url = data + redirectUrlParsed.pathname;
-        console.log(url)
         window.location.href = addHttp(url);
     } catch(err) {
-        console.log(err)
         window.location.href = './404.html';
     }
 }
@@ -37,7 +33,6 @@ async function getContentFromAccount(publicKey) {
     const connection = new web3.Connection(web3.clusterApiUrl('mainnet-beta'));
     const nameAccount = await connection.getAccountInfo(publicKey, 'processed');
     const data = nameAccount.data.toString('ascii').slice(96).replace(/\0/g, '');
-    console.log(data)
     return data;
 }
 
@@ -66,7 +61,6 @@ async function getKey(name) {
       seeds,
       NAME_PROGRAM_ID
     );
-    console.log(seeds, nameAccountKey)
     return nameAccountKey;
 }
 
