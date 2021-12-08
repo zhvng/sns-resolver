@@ -11,13 +11,15 @@ async function main() {
     const solanaUrlParsed = new URL(solanaUrl);
     const hostnameArray = solanaUrlParsed.hostname.split('.');
     const SNSDomain = hostnameArray[hostnameArray.length - 2];
+    const SNSDomainFull = SNSDomain + '.sol';
 
-    document.getElementById('display').textContent = SNSDomain + '.sol';
+    document.getElementById('display').textContent = SNSDomainFull;
     try{
         const publicKey = await getKey(SNSDomain);
         const data = await getContentFromAccount(publicKey);
         const url = data + solanaUrlParsed.pathname;
         window.location.href = addHttps(url);
+        createDomainPopup(SNSDomainFull, data);
     } catch(err) {
         window.location.href = './404.html';
     }
@@ -34,6 +36,26 @@ function addHttps(url) {
         url = "https://" + url;
     }
     return url;
+}
+
+/**
+ * Create a popup notifying the user what domain they are on
+ * TODO: option to disable
+ * 
+ * @param solanaDomain the url 
+ */
+ async function createDomainPopup(solanaDomain, redirectDomain) {
+    const NOTIFICATION_WIDTH = 200;
+    const NOTIFICATION_HEIGHT = 300;    
+
+    const popup = await chrome.windows.create({
+        url: `./src/notification.html?solanaDomain=${solanaDomain}&redirectDomain=${redirectDomain}`,
+        type: "popup",
+        top: Math.max(window.screenY, 0),
+        left: window.screenX + window.outerWidth - NOTIFICATION_WIDTH,
+        width: NOTIFICATION_WIDTH,
+        height: NOTIFICATION_HEIGHT,
+    });
 }
 
 /**
