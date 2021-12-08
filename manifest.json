@@ -12,7 +12,7 @@
         "webRequest"
     ],
     "host_permissions": [
-        "*://*.google.com/",
+        "*://www.google.com/search?q=*",
         "*://*.sol/*"
     ]
   }

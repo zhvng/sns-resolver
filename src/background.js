@@ -22,7 +22,7 @@ chrome.webRequest.onBeforeRequest.addListener(
         await redirect(solanaUrl);
     },
     {
-        urls: ["*://*.google.com/search?q=*.sol&*", "*://*.google.com/search?q=*.sol%2F*&*"]
+        urls: ["*://www.google.com/search?q=*.sol&*", "*://www.google.com/search?q=*.sol%2F*&*"]
     },
 []);
 
