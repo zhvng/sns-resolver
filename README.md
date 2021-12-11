@@ -2,6 +2,8 @@
 
 Chrome extension that lets users access `.sol` domains in the browser! Works by redirecting requests for sol domains to the url, ip address or ipfs hash stored in the "content" field on Solana's SPL Name Service.
 
+Try it here! <https://chrome.google.com/webstore/detail/solana-name-service-resol/lbkiafnipfoblbkckpickbjijclffdpl?hl=en&authuser=0>
+
 ## Vision
 For web 3.0 to be truly decentralized, we can't rely on centralized domain registrars and DNS services. The goal of this extension is to use the Solana blockchain as a name server and pave the way for a trustless and easy-to-use permaweb.
 
