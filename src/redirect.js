@@ -12,7 +12,7 @@ async function main() {
     const hostnameArray = solanaUrlParsed.hostname.split('.');
     const SNSDomain = hostnameArray[hostnameArray.length - 2];
     const SNSDomainFull = SNSDomain + '.sol';
-    const SNSPathname = solanaUrlParsed.pathname;
+    const SNSPathAndSearch = solanaUrlParsed.pathname + solanaUrlParsed.search;
 
     document.getElementById('display').textContent = SNSDomainFull;
     try{
@@ -24,16 +24,16 @@ async function main() {
 
         if (data.startsWith(ipfsPrefix)) {
             const cid = data.slice(ipfsPrefix.length);
-            const url = 'https://ipfs.io/ipfs/' + cid + SNSPathname;
-            createDomainPopup(SNSDomainFull, 'ipfs', 'cid: ' + cid, SNSPathname);
+            const url = 'https://ipfs.io/ipfs/' + cid + SNSPathAndSearch;
+            createDomainPopup(SNSDomainFull, 'ipfs', 'cid: ' + cid, SNSPathAndSearch);
             window.location.href = url;
         } else if (data.match(ipAddressRegex)) {
-            createDomainPopup(SNSDomainFull, data, '', SNSPathname);
-            const url = 'http://' + data + SNSPathname;
+            createDomainPopup(SNSDomainFull, data, '', SNSPathAndSearch);
+            const url = 'http://' + data + SNSPathAndSearch;
             window.location.href = url;
         } else {
-            createDomainPopup(SNSDomainFull, data, '', SNSPathname);
-            const url = data + SNSPathname;
+            createDomainPopup(SNSDomainFull, data, '', SNSPathAndSearch);
+            const url = data + SNSPathAndSearch;
             window.location.href = addHttps(url);
         }
     } catch(err) {
