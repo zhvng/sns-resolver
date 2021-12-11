@@ -12,14 +12,30 @@ async function main() {
     const hostnameArray = solanaUrlParsed.hostname.split('.');
     const SNSDomain = hostnameArray[hostnameArray.length - 2];
     const SNSDomainFull = SNSDomain + '.sol';
+    const SNSPathname = solanaUrlParsed.pathname;
 
     document.getElementById('display').textContent = SNSDomainFull;
     try{
         const publicKey = await getKey(SNSDomain);
         const data = await getContentFromAccount(publicKey);
-        const url = data + solanaUrlParsed.pathname;
-        window.location.href = addHttps(url);
-        createDomainPopup(SNSDomainFull, data);
+
+        const ipfsPrefix = 'ipfs=';
+        const ipAddressRegex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+
+        if (data.startsWith(ipfsPrefix)) {
+            const cid = data.slice(ipfsPrefix.length);
+            const url = 'https://ipfs.io/ipfs/' + cid + SNSPathname;
+            createDomainPopup(SNSDomainFull, 'ipfs', 'cid: ' + cid, SNSPathname);
+            window.location.href = url;
+        } else if (data.match(ipAddressRegex)) {
+            createDomainPopup(SNSDomainFull, data, '', SNSPathname);
+            const url = 'http://' + data + SNSPathname;
+            window.location.href = url;
+        } else {
+            createDomainPopup(SNSDomainFull, data, '', SNSPathname);
+            const url = data + SNSPathname;
+            window.location.href = addHttps(url);
+        }
     } catch(err) {
         window.location.href = './404.html';
     }
@@ -44,12 +60,12 @@ function addHttps(url) {
  * 
  * @param solanaDomain the url 
  */
- async function createDomainPopup(solanaDomain, redirectDomain) {
+ async function createDomainPopup(solanaDomain, redirectDomain, details, path) {
     const NOTIFICATION_WIDTH = 200;
     const NOTIFICATION_HEIGHT = 300;    
 
     const popup = await chrome.windows.create({
-        url: `./src/notification.html?solanaDomain=${solanaDomain}&redirectDomain=${redirectDomain}`,
+        url: `./src/notification.html?solanaDomain=${solanaDomain}&redirectDomain=${redirectDomain}&details=${details}&path=${path}`,
         type: "popup",
         top: Math.max(window.screenY, 0),
         left: window.screenX + window.outerWidth - NOTIFICATION_WIDTH,
