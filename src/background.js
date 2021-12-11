@@ -14,7 +14,7 @@
  * Listener for requests that are auto-converted into google search queries by Chrome.
  * Since .sol is not a recognized domain extension, chrome will automatically search for the domain in 
  *  the user's default search engine if entered into the address bar. This listener redirects the search request.
- * We are assuming the default search engine is google.com. Support for additional search engines coming later.
+ * Supported search engines: Google, DuckDuckGo
  */
 chrome.webRequest.onBeforeRequest.addListener(  
     async (details) => {
