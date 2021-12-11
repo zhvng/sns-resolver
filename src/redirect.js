@@ -1,7 +1,7 @@
 const web3 = solanaWeb3;
 
 /**
- * Redirects the solana url to the domain/ip/ipfs hash(TODO) it points to.
+ * Redirects the solana url to the domain/ip/ipfs hash it points to.
  * 
  * window.location.href has one param `solanaUrl`, which contains the hostname and path 
  *  of the solana url that is passed in. Not required to contain other elements.
