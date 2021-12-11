@@ -1,4 +1,4 @@
-# Solana Name Service Resolver For Chrome
+# Solana Name Service Resolver (snsr) For Chrome
 
 Chrome extension that lets users access `.sol` domains in the browser! Works by redirecting requests for sol domains to the url, ip address or ipfs hash stored in the "content" field on Solana's SPL Name Service.
 
