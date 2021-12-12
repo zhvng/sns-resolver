@@ -1,11 +1,20 @@
-# Solana Name Service Resolver For Chrome
+# Solana Name Service Resolver (snsr) For Chrome
 
-Lightweight chrome extension that lets users access `.sol` domains in the browser! Works by redirecting requests for sol domains to the url, ip address or ipfs hash stored in the "content" field on Solana's SPL Name Service.
+Chrome extension that lets users access `.sol` domains in the browser! Works by redirecting requests for sol domains to the url, ip address or ipfs hash stored in the "content" field on Solana's SPL Name Service.
+
+Try it here! <https://chrome.google.com/webstore/detail/solana-name-service-resol/lbkiafnipfoblbkckpickbjijclffdpl?hl=en&authuser=0>
 
 ## Vision
 For web 3.0 to be truly decentralized, we can't rely on centralized domain registrars and DNS services. The goal of this extension is to use the Solana blockchain as a name server and pave the way for a trustless and easy-to-use permaweb.
 
-## Install and run
+## How to use
+1. Purchase an SNS domain at <https://naming.bonfida.org> 
+2. Edit the "content" field to the site you want to redirect to
+    - To resolve to an ipfs cid, set the field to `ipfs=` followed by the cid (e.g. `ipfs=QmXoypizjW3WknFiJnKLwHCnL72vedxjQkDDP1mXWo6uco`)
+    - To resolve to an ip address or domain name, enter just the domain name or ip (e.g. `google.com`, `142.250.217.78`)
+3. With the extension installed, navigate to `<yourdomain>.sol`
+
+## Install and run for developers
 1. Clone this repo
 2. Load the extension on chrome following
     1. Access `chrome://extensions/`
