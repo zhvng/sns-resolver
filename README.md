@@ -35,3 +35,6 @@ This is an open source chrome extension and anyone can read the code.
 `solana-web3.min.js` is the minified version of v1.31.0 of the solana web3 library with "use strict" removed from the first line. It can be verified here: <https://unpkg.com/@solana/web3.js@1.31.0/lib/index.iife.min.js>.
 
 `crypto-js.min.js` is the minified version of v4.1.1 of the crypto-js library without any modifications. It can be verified here: <https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js>.
+
+## Manifest Version
+Currently the Manifest V3 version of the app (on 'main' branch) contains a bug where the extension stops working after sitting idle for a few minutes. This is a bug with Chrome's manifest v3 and is being tracked here <https://bugs.chromium.org/p/chromium/issues/detail?id=1024211>. Until this bug is fixed, our working releases will come from the 'mv2' branch; i.e. before every release, we will merge changes into the 'mv2' branch and convert the code to 'mv2'.
