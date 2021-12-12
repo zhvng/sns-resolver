@@ -1,7 +1,7 @@
 {
     "name": "Solana Name Service Resolver",
     "version": "1.0",
-    "manifest_version": 3,
+    "manifest_version": 2,
     "icons": {
         "16": "icons/icon16.png",
         "48": "icons/icon48.png",
@@ -9,15 +9,14 @@
     },
     "description": "Use .sol domains in the browser!",
     "background": {
-      "service_worker": "src/background.js"
+        "persistent": true,
+        "scripts": ["src/background.js"]
     },
-    "action": {
+    "page_action": {
         "default_popup": "popup.html"
     },
     "permissions": [
-        "webRequest"
-    ],
-    "host_permissions": [
+        "webRequest",
         "*://*.sol/*",
         "https://duckduckgo.com/",
         "*://www.google.com/",

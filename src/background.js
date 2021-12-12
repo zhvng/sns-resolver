@@ -29,14 +29,15 @@ chrome.webRequest.onBeforeRequest.addListener(
 []);
 
 /**
- * Retreive the tab the user is navigating from
+ * Retreive the tab the user is navigating from (MV2)
  * 
  * @returns current active tab
  */
 async function getCurrentTab () {
-    const [tab] = await chrome.tabs.query({
-        active: true,
-        currentWindow: true,
+    const tab = await new Promise((resolve, reject) => {
+        chrome.tabs.getSelected(null, (tab)=>{
+            tab ? resolve(tab) : reject();
+        });
     });
     return tab;
 }
