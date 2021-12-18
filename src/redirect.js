@@ -11,7 +11,7 @@ async function main() {
     const solanaUrlParsed = new URL(solanaUrl);
     const hostnameArray = solanaUrlParsed.hostname.split('.');
     const SNSDomain = hostnameArray[hostnameArray.length - 2];
-    const SNSDomainFull = SNSDomain + '.sol';
+    const SNSDomainFull = (hostnameArray.length === 3 ? hostnameArray[0] + '.': '') + SNSDomain + '.sol';
     const SNSPathAndSearch = solanaUrlParsed.pathname + solanaUrlParsed.search;
 
     document.getElementById('display').textContent = SNSDomainFull;
