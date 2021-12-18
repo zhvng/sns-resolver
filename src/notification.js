@@ -7,4 +7,4 @@ document.getElementById('solanaDomain').textContent = params.get('solanaDomain')
 document.getElementById('redirectDomain').textContent = params.get('redirectDomain');
 document.getElementById('details').textContent = params.get('details');
 const path = params.get('path');
-document.getElementById('path').textContent = path == '/'? '' : path;
+document.getElementById('path').textContent = path === '/'? '' : path;

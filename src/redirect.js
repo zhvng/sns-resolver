@@ -16,8 +16,12 @@ async function main() {
 
     document.getElementById('display').textContent = SNSDomainFull;
     try{
-        const publicKey = await getKey(SNSDomain);
-        const data = await getContentFromAccount(publicKey);
+        let domainKey = await getDomainKey(SNSDomain);
+        let accountKey = domainKey;
+        if (hostnameArray.length === 3) { // Check if there's a subdomain in the input and set accountKey if so
+            accountKey = await getSubdomainKey(domainKey, hostnameArray[0]);
+        }
+        const data = await getContentFromAccount(accountKey);
 
         const ipfsPrefix = 'ipfs=';
         const ipAddressRegex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
@@ -45,7 +49,7 @@ async function main() {
  * Append the `https://` scheme to the beginning of a url if it does not have it.
  * 
  * @param {string} url to add the scheme to
- * @returns String of the url with a scheme
+ * @returns {string} url with a scheme
  */
 function addHttps(url) {
     if (!url.match(/^(?:f|ht)tps?:\/\//)) {
@@ -75,9 +79,10 @@ function addHttps(url) {
 }
 
 /**
+ * Retreive the data stored in a given account
  * 
- * @param {web3.PublicKey} publicKey 
- * @returns 
+ * @param {web3.PublicKey} publicKey key pointing to the account
+ * @returns {Promise<string>} Promise resolving to the stringified content of the account
  */
 async function getContentFromAccount(publicKey) {
     const connection = new web3.Connection(web3.clusterApiUrl('mainnet-beta'));
@@ -88,35 +93,86 @@ async function getContentFromAccount(publicKey) {
 
 /**
  * Compute the key for the account pointing to the domain. 
- * Code from @solana/spl-name-service with modifications so it works in the browser.
+ * See https://github.com/Bonfida/solana-name-service-guide
  * 
- * @param {*} name The .sol domain name
- * @returns Public key of the domain's account in the sns
+ * @param {string} name The .sol domain name
+ * @returns {Promise<web3.PublicKey>} Public key of the domain's account in the sns
  */
-async function getKey(name) {
-    const HASH_PREFIX = 'SPL Name Service';
+async function getDomainKey(name) {
     const SOL_TLD_AUTHORITY = new web3.PublicKey(
         "58PwtjSDuFHuUkYjH9BYnnQKHfwo9reZhC2zMJv9JPkx"
     ); 
+    const hashedName = getHashedName(name);
+    const domainKey = await getNameAccountKey(
+        hashedName,
+        undefined,
+        SOL_TLD_AUTHORITY,
+    );
+    return domainKey;
+}
+
+/**
+ * Compute the key for the account pointing to a given subdomain. 
+ * See https://github.com/Bonfida/solana-name-service-guide
+ * 
+ * @param {web3.PublicKey} parentDomainKey The parent .sol domain name
+ * @param {string} subdomain The subdomain to compute the key for
+ * @returns {Promise<web3.PublicKey>} Public key of the subdomain's account in the sns
+ */
+ async function getSubdomainKey(parentDomainKey, subdomain) {
+    const hashedName = getHashedName("\0".concat(subdomain));
+    const subdomainAccount = await getNameAccountKey(
+      hashedName,
+      undefined,
+      parentDomainKey
+    );
+    return subdomainAccount;
+}
+
+/**
+ * Get the sha256 hash of a domain name or subdomain identifier prefixed with the hash prefix.
+ * Code from @solana/spl-name-service with modifications so it works in the browser.
+ * 
+ * @param {string} name The domain name or subdomain identifier to hash
+ * @returns {string} Hashed name for onchain lookup
+ */
+function getHashedName(name) {
+    const HASH_PREFIX = 'SPL Name Service';
+    const input = HASH_PREFIX + name;
+    const fromHexString = hexString =>
+        new Uint8Array(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+    const hashed_name = fromHexString(CryptoJS.SHA256(input).toString());
+    return hashed_name;
+}
+
+/**
+ * Compute the public key for a given account in the Solana Name Service.
+ * The inputs are the seeds that are used to compute the PDA.
+ * Code from @solana/spl-name-service with modifications so it works in the browser.
+ * 
+ * @param {string} hashed_name Hash of a domain name or subdomain identifier, as returned by getHashedName()
+ * @param {web3.PublicKey | undefined} nameClass Class of the (sub?)domain name. Seems like this is currently unused, leave 'undefined',
+ * @param {web3.PublicKey | undefined} nameParent Parent of the (sub?)domain name. For .sol domains, this is the .sol TLD Authority. For subdomains, this is the parent domain.
+ * @returns {Promise<web3.PublicKey>} Key of the name's on-chain account
+ */
+async function getNameAccountKey(hashed_name, nameClass, nameParent) {
+    const seeds = [hashed_name];
+    if (nameClass) {
+        seeds.push(nameClass.toBuffer());
+    } else {
+        seeds.push(new Uint8Array(32));
+    }
+    if (nameParent) {
+        seeds.push(nameParent.toBuffer());
+    } else {
+        seeds.push(new Uint8Array(32));
+    }
     const NAME_PROGRAM_ID = new web3.PublicKey(
         'namesLPneVptA9Z5rqUDD9tMTWEJwofgaYwp8cawRkX'
     );
-
-    // HASH DOMAIN NAME WITH HASH PREFIX
-    const input = HASH_PREFIX + name;
-    
-    const fromHexString = hexString =>
-        new Uint8Array(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
-
-    const hashed_name = fromHexString(CryptoJS.SHA256(input).toString());
-
-    // BUILD SEEDS AND FIND ADDRESS
-    const seeds = [hashed_name];
-    seeds.push(new Uint8Array(32));
-    seeds.push(SOL_TLD_AUTHORITY.toBuffer());
     const [nameAccountKey] = await web3.PublicKey.findProgramAddress(
-      seeds,
-      NAME_PROGRAM_ID
+        seeds,
+        NAME_PROGRAM_ID
     );
     return nameAccountKey;
 }
