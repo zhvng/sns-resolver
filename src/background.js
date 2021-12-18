@@ -31,7 +31,7 @@ chrome.webRequest.onBeforeRequest.addListener(
 /**
  * Retreive the tab the user is navigating from
  * 
- * @returns current active tab
+ * @returns {chrome.tabs.Tab} current active tab
  */
 async function getCurrentTab () {
     const [tab] = await chrome.tabs.query({

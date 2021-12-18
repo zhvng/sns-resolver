@@ -49,7 +49,7 @@ async function main() {
  * Append the `https://` scheme to the beginning of a url if it does not have it.
  * 
  * @param {string} url to add the scheme to
- * @returns String of the url with a scheme
+ * @returns {string} url with a scheme
  */
 function addHttps(url) {
     if (!url.match(/^(?:f|ht)tps?:\/\//)) {
@@ -79,9 +79,10 @@ function addHttps(url) {
 }
 
 /**
+ * Retreive the data stored in a given account
  * 
- * @param {web3.PublicKey} publicKey 
- * @returns 
+ * @param {web3.PublicKey} publicKey key pointing to the account
+ * @returns {Promise<string>} Promise resolving to the stringified content of the account
  */
 async function getContentFromAccount(publicKey) {
     const connection = new web3.Connection(web3.clusterApiUrl('mainnet-beta'));
@@ -95,7 +96,7 @@ async function getContentFromAccount(publicKey) {
  * See https://github.com/Bonfida/solana-name-service-guide
  * 
  * @param {string} name The .sol domain name
- * @returns Public key of the domain's account in the sns
+ * @returns {Promise<web3.PublicKey>} Public key of the domain's account in the sns
  */
 async function getDomainKey(name) {
     const SOL_TLD_AUTHORITY = new web3.PublicKey(
@@ -107,7 +108,7 @@ async function getDomainKey(name) {
         undefined,
         SOL_TLD_AUTHORITY,
     );
-    return domainKey
+    return domainKey;
 }
 
 /**
@@ -116,7 +117,7 @@ async function getDomainKey(name) {
  * 
  * @param {web3.PublicKey} parentDomainKey The parent .sol domain name
  * @param {string} subdomain The subdomain to compute the key for
- * @returns Public key of the subdomain's account in the sns
+ * @returns {Promise<web3.PublicKey>} Public key of the subdomain's account in the sns
  */
  async function getSubdomainKey(parentDomainKey, subdomain) {
     const hashedName = getHashedName("\0".concat(subdomain));
@@ -133,7 +134,7 @@ async function getDomainKey(name) {
  * Code from @solana/spl-name-service with modifications so it works in the browser.
  * 
  * @param {string} name The domain name or subdomain identifier to hash
- * @returns Hashed name for onchain lookup
+ * @returns {string} Hashed name for onchain lookup
  */
 function getHashedName(name) {
     const HASH_PREFIX = 'SPL Name Service';
