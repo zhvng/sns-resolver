@@ -39,8 +39,7 @@ async function main() {
             // Extract pathname from url for display purposes
             const redirectUrl = new URL(addHttps(data));
             const hostname = redirectUrl.hostname;
-            console.log(hostname, redirectUrl.pathname, SNSPathAndSearch)
-            const fullPathAndSearch = redirectUrl.pathname + SNSPathAndSearch;
+            const fullPathAndSearch = (redirectUrl.pathname === '/' ? '' : redirectUrl.pathname) + SNSPathAndSearch;
             createDomainPopup(SNSDomainFull, hostname, '', fullPathAndSearch);
             const url = data + SNSPathAndSearch;
             window.location.href = addHttps(url);
