@@ -36,11 +36,17 @@ async function main() {
             const url = 'http://' + data + SNSPathAndSearch;
             window.location.href = url;
         } else {
-            createDomainPopup(SNSDomainFull, data, '', SNSPathAndSearch);
+            // Extract pathname from url for display purposes
+            const redirectUrl = new URL(addHttps(data));
+            const hostname = redirectUrl.hostname;
+            console.log(hostname, redirectUrl.pathname, SNSPathAndSearch)
+            const fullPathAndSearch = redirectUrl.pathname + SNSPathAndSearch;
+            createDomainPopup(SNSDomainFull, hostname, '', fullPathAndSearch);
             const url = data + SNSPathAndSearch;
             window.location.href = addHttps(url);
         }
     } catch(err) {
+        console.log(err);
         window.location.href = './404.html';
     }
 }
@@ -83,6 +89,7 @@ function addHttps(url) {
  * 
  * @param {web3.PublicKey} publicKey key pointing to the account
  * @returns {Promise<string>} Promise resolving to the stringified content of the account
+ * @throws {Error} 
  */
 async function getContentFromAccount(publicKey) {
     const connection = new web3.Connection(web3.clusterApiUrl('mainnet-beta'));
