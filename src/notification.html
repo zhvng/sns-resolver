@@ -3,10 +3,10 @@
 <title>snsr</title>
 <div id="main">
   <div class="fof">
-        <text id="solanaDomain"></text>
-        <div id="diagram">
+        <text id="solanaDomain" class="tableRow"></text>
+        <div class="tableRow">
           <div id="arrow"></div>
-          <text id="snsr">☀️ snsr</text>
+          <text>☀️</text>
           <div id="arrow"></div>
         </div>
         <div>
@@ -43,31 +43,23 @@ body{
   height: 90%;
   margin-bottom: 50px;
 }
-#diagram {
+.tableRow {
   height: 40%;
-  margin-top: -5px;
 }
 #solanaDomain {
-  height: 40%;
   font-size: 24px;
   font-weight:lighter;
 }
-#snsr {
-  color: #888;
-  border: 1px solid #888;
-  padding-left: 1.84px;
-  padding-right: 5px;
-}
 #arrow:before {
     border-style: solid;
-    border-width: 1px 1px 0 0;
+    border-width: 0.15em 0.15em 0 0;
     content: '';
-    margin-top: 0px;
-    margin-bottom: 2px;
     display: inline-block;
-    height: 7.2px;
+    height: 0.45em;
+    left: 0.15em;
+    top: 0.15em;
     vertical-align: top;
-    width: 7.2px;
+    width: 0.45em;
     transform: rotate(135deg);
 }
 #redirectDomain {
