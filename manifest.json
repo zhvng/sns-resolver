@@ -12,10 +12,11 @@
       "service_worker": "src/background.js"
     },
     "action": {
-        "default_popup": "popup.html"
+        "default_popup": "/src/popup.html"
     },
     "permissions": [
-        "webRequest"
+        "webRequest",
+        "storage"
     ],
     "host_permissions": [
         "*://*.sol/*",
