@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<meta charset="utf8">
+<html>
+  <head>
+    <title>SNS Resolver</title>
+  </head>
+  <body>
+      <div id="header">
+        <div id="logo">SNSR</div>
+      </div>
+      <div id="info"></div>
+      <div class="settings">
+        <div class="label">IPFS Gateway</div>
+        <select id="gateways"></select>
+      </div>
+      <div class="smalltext">View IPFS gateway status 
+        <a href="https://ipfs.github.io/public-gateway-checker/" target="_blank">here</a>. 
+        We recommend using gateways with origin isolation (green check).
+      </div>
+      <!-- TODO: CUSTOM IPFS GATEWAY -->
+      <!-- TODO: CUSTOM RPC ENDPOINT -->
+      <!-- <div class="settings">
+        <div>RPC Endpoint</div>
+        <select id="rpcs"></select>
+      </div> -->
+  </body>
+  <script src="ipfs.js"></script>
+  <script src="popup.js"></script>
+</html>
+
+<style>
+  body{
+    font-family: 'Lato', sans-serif;
+    color: #888;
+    height: 300px;
+    width: 200px;
+    background-color: #111;
+    text-align: center;
+  }
+  .smalltext {
+    position: absolute;
+    bottom: 10px;
+    font-size: 12px;
+  }
+  .label{
+    font-size: 16px;
+  }
+  #info{
+    margin: 60px;
+  }
+  #logo{
+    font-size: 36px;
+  }
+  #version {
+    font-size: 10px;
+  }
+  a, a:link, a:visited, a:hover, a:focus, a:active{
+  color:lightblue;
+}
+  .settings {
+    font-size: 16px;
+    margin: 10px;
+    color: #888;
+  }
+  select {
+    margin-top: 1px;
+    padding: 7px 10px 7px 12px;
+    border: 1px solid #E8EAED;
+    border-radius: 2px;
+    width: 85%;
+    background: #111;
+    box-shadow: 0 1px 3px -2px #9098A9;
+    cursor: crosshair;
+    outline: none;
+    color: white;
+    font-size: 16px;
+  }
+</style>

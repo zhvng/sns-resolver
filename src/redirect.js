@@ -28,7 +28,7 @@ async function main() {
 
         if (data.startsWith(ipfsPrefix)) {
             const cid = data.slice(ipfsPrefix.length);
-            const url = 'https://ipfs.io/ipfs/' + cid + SNSPathAndSearch;
+            const url = await buildIPFSUrl(cid, SNSPathAndSearch);
             createDomainPopup(SNSDomainFull, 'ipfs', 'cid: ' + cid, SNSPathAndSearch);
             window.location.href = url;
         } else if (data.match(ipAddressRegex)) {
@@ -48,19 +48,6 @@ async function main() {
         console.log(err);
         window.location.href = './404.html';
     }
-}
-
-/**
- * Append the `https://` scheme to the beginning of a url if it does not have it.
- * 
- * @param {string} url to add the scheme to
- * @returns {string} url with a scheme
- */
-function addHttps(url) {
-    if (!url.match(/^(?:f|ht)tps?:\/\//)) {
-        url = "https://" + url;
-    }
-    return url;
 }
 
 /**
