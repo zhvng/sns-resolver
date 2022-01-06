@@ -33,7 +33,7 @@ async function getIPFSGateway() {
     if ('IPFSGateway' in data) {
         return data['IPFSGateway'];
     } else {
-        await chrome.storage.local.set({IPFSGateway: DEFAULT_GATEWAY});
+        await setIPFSGateway(DEFAULT_GATEWAY);
         return DEFAULT_GATEWAY;
     }
 };
